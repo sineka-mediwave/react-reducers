@@ -20,7 +20,7 @@ const TodoAddForm = ({ handleAdd }) => {
       <label>
         <input
           type="text"
-          class="form-control"
+          className="form-control"
           onChange={(e) => {
             setText(e.target.value);
           }}

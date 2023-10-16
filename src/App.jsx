@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { useReducer } from "react";
 import TodoAddForm from "./components/TodoAddForm";
+import TodoList from "./components/TodoList";
+
 function App() {
   const [todos, dispatch] = useReducer(todoReducer, []);
 
@@ -13,12 +15,21 @@ function App() {
             id: new Date().getTime(),
             text: action.value,
             isDone: false,
+            isEdit: false,
           },
         ];
       }
       case "TODO_DELETE": {
         const filtered = todos.filter((t) => t.id != action.value);
         return [...filtered];
+      }
+      case "TODO_EDIT": {
+        const newTodos = [...todos];
+        const idx = newTodos.findIndex((nt) => nt.id === action.value);
+        if (idx !== -1) {
+          newTodos[idx]["isEdit"] = true;
+        }
+        return newTodos;
       }
       case "TODO_DONE": {
         const newTodos = [...todos];
@@ -49,10 +60,43 @@ function App() {
     });
   }
 
+  function handleDelete(id) {
+    dispatch({
+      type: "TODO_DELETE",
+      value: id,
+    });
+  }
+  function handleEdit(id) {
+    dispatch({
+      type: "TODO_EDIT",
+      value: id,
+    });
+  }
+
+  function handleDone(id, type) {
+    if (type == "done") {
+      dispatch({
+        type: "TODO_DONE",
+        value: id,
+      });
+    } else {
+      dispatch({
+        type: "TODO_UNDONE",
+        value: id,
+      });
+    }
+  }
+
   return (
     <>
       <h1>My Todo App</h1>
       <TodoAddForm handleAdd={handleAdd} />
+      <TodoList
+        todos={todos}
+        handleDelete={handleDelete}
+        handleDone={handleDone}
+        handleEdit={handleEdit}
+      />
     </>
   );
 }
