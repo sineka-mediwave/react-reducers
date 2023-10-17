@@ -16,8 +16,9 @@ const TodoAddForm = ({ handleAdd }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mb-4">
       <label>
+        Enter Todo :
         <input
           type="text"
           className="form-control"
@@ -31,7 +32,11 @@ const TodoAddForm = ({ handleAdd }) => {
       <button type="submit" className="btn btn-primary">
         Add Todo
       </button>
-      {errorDiv ? <div>type atleast 5 characters</div> : <div></div>}
+      {errorDiv ? (
+        <div className="form-text text-muted">type atleast 5 characters</div>
+      ) : (
+        <div></div>
+      )}
     </form>
   );
 };

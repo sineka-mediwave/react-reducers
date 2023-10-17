@@ -7,14 +7,21 @@ const EditTodo = (props) => {
 
   return (
     <>
-      <input
-        id={`text-${item.id}`}
-        type="text"
-        placeholder={item.text}
-        value={editValue}
-        onChange={handleChange}
-      />
-      <button onClick={() => handleSave(item.id, editValue)}>Update</button>
+      <div className="input-group-text">
+        <input
+          id={`text-${item.id}`}
+          type="text"
+          placeholder={item.text}
+          value={editValue}
+          onChange={handleChange}
+        />
+        <button
+          className="btn btn-outline-secondary btn-sm"
+          onClick={() => handleSave(item.id, editValue)}
+        >
+          Update
+        </button>
+      </div>
     </>
   );
 };

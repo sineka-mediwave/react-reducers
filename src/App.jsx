@@ -1,10 +1,18 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import TodoAddForm from "./components/TodoAddForm";
 import TodoList from "./components/TodoList";
 
+function getFromLocalStorage() {
+  return JSON.parse(localStorage.getItem("My-Todos")) || [];
+}
+
 function App() {
-  const [todos, dispatch] = useReducer(todoReducer, []);
+  const [todos, dispatch] = useReducer(todoReducer, getFromLocalStorage());
+
+  useEffect(() => {
+    localStorage.setItem("My-Todos", JSON.stringify(todos));
+  }, [todos]);
 
   function todoReducer(todos, action) {
     switch (action.type) {
@@ -32,32 +40,25 @@ function App() {
         return newTodos;
       }
       case "TODO_UPDATE": {
-        console.log("update");
-
         const newTodos = [...todos];
         const idx = newTodos.findIndex((nt) => nt.id === action.value.id);
         if (idx !== -1) {
           newTodos[idx]["isEdit"] = false;
           newTodos[idx]["text"] = action.value.text;
         }
-        console.log(newTodos);
         return newTodos;
       }
       case "TODO_DONE": {
         const newTodos = [...todos];
-        const idx = newTodos.findIndex((nt) => nt.id === action.value.id);
+        const idx = newTodos.findIndex((nt) => nt.id === action.value);
         if (idx !== -1) {
           newTodos[idx]["isDone"] = true;
-          action.value.Class.style.setProperty(
-            "text-decoration",
-            "line-through"
-          );
         }
         return newTodos;
       }
       case "TODO_UNDONE": {
         const newTodos = [...todos];
-        const idx = newTodos.findIndex((nt) => nt.id === action.value.id);
+        const idx = newTodos.findIndex((nt) => nt.id === action.value);
         if (idx !== -1) {
           newTodos[idx]["isDone"] = false;
         }
@@ -95,23 +96,23 @@ function App() {
     });
   }
 
-  function handleDone(id, type, Class) {
+  function handleDone(id, type) {
     if (type == "done") {
       dispatch({
         type: "TODO_DONE",
-        value: { is, Class },
+        value: id,
       });
     } else {
       dispatch({
         type: "TODO_UNDONE",
-        value: { id, Class },
+        value: id,
       });
     }
   }
 
   return (
     <div className="container-fluid">
-      <h1>My Todo App</h1>
+      <h1 className="mb-4">My Todo App</h1>
       <TodoAddForm handleAdd={handleAdd} />
       <TodoList
         todos={todos}
