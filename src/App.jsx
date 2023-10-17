@@ -64,6 +64,9 @@ function App() {
         }
         return newTodos;
       }
+      case "TODO_DRAG": {
+        return action.value;
+      }
       default: {
         throw Error("Unknown action: " + action.type);
       }
@@ -96,6 +99,13 @@ function App() {
     });
   }
 
+  function dragUpdate(newTodos) {
+    dispatch({
+      type: "TODO_DRAG",
+      value: newTodos,
+    });
+  }
+
   function handleDone(id, type) {
     if (type == "done") {
       dispatch({
@@ -120,6 +130,7 @@ function App() {
         handleDone={handleDone}
         handleEdit={handleEdit}
         handleUpdate={handleUpdate}
+        dragUpdate={dragUpdate}
       />
     </div>
   );

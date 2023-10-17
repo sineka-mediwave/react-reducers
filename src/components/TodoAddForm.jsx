@@ -29,7 +29,7 @@ const TodoAddForm = ({ handleAdd }) => {
           required
         />
       </label>
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-secondary mx-4">
         Add Todo
       </button>
       {errorDiv ? (

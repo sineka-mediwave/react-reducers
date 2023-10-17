@@ -1,3 +1,4 @@
+import { useState } from "react";
 import EditTodo from "./EditTodo";
 
 const TodoList = ({
@@ -6,7 +7,41 @@ const TodoList = ({
   handleDone,
   handleEdit,
   handleUpdate,
+  dragUpdate,
 }) => {
+  const [draggedTodo, setDraggedTodo] = useState(null);
+
+  const handleDragStart = (todo) => {
+    setDraggedTodo(todo);
+    console.log("start");
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    console.log("moving");
+  };
+
+  const handleDrop = (target) => {
+    console.log("dropped");
+
+    if (draggedTodo) {
+      const updatedTodos = [...todos];
+
+      const draggedIndex = updatedTodos.findIndex(
+        (t) => t.id === draggedTodo.id
+      );
+      const targetIndex = updatedTodos.findIndex((t) => t.id === target.id);
+
+      if (draggedIndex !== -1 && targetIndex !== -1) {
+        updatedTodos.splice(draggedIndex, 1);
+        updatedTodos.splice(targetIndex, 0, draggedTodo);
+      }
+
+      dragUpdate(updatedTodos);
+      setDraggedTodo(null);
+    }
+  };
+
   function handleCheck(e, id) {
     let type = "done";
     if (!e.target.checked) {
@@ -16,19 +51,27 @@ const TodoList = ({
   }
 
   function handleSave(id, value) {
+    if (!value) {
+    }
     handleUpdate(id, value);
   }
 
   return (
     <div>
       {todos.map((t) => (
-        <div key={t.id}>
+        <div
+          key={t.id}
+          draggable
+          onDragStart={() => handleDragStart(t)}
+          onDragOver={(e) => handleDragOver(e)}
+          onDrop={() => handleDrop(t)}
+        >
           {t.isEdit ? (
             <>
               <EditTodo item={t} handleSave={handleSave} />
             </>
           ) : (
-            <div className="input-group-text justify-content-between mb-3">
+            <div className="input-group-text justify-content-between mb-3 col-sm-6">
               <div>
                 <input
                   type="checkbox"
@@ -38,14 +81,15 @@ const TodoList = ({
                   onChange={(e) => handleCheck(e, t.id)}
                 />
                 <span
+                  className="px-3"
                   style={t.isDone ? { textDecoration: "line-through" } : {}}
                 >
                   {t.text}
                 </span>
               </div>
-              <div class="input-group-append">
+              <div className="input-group-append">
                 <button
-                  className="btn btn-outline-secondary btn-sm"
+                  className="btn btn-outline-secondary btn-sm mx-2"
                   onClick={() => handleDelete(t.id)}
                 >
                   Delete
