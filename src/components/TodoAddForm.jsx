@@ -28,7 +28,7 @@ const TodoAddForm = ({ handleAdd }) => {
           required
         />
       </label>
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" className="btn btn-primary">
         Add Todo
       </button>
       {errorDiv ? <div>type atleast 5 characters</div> : <div></div>}

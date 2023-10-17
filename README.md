@@ -25,4 +25,4 @@
 ### TodoList
 
 - component is created for todoList that contains the list of todos with checkbox. Each todos consist of Edit and Delete Button.
--
+- Created a separate component to display todo and editForm.

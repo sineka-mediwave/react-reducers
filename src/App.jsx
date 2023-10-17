@@ -31,17 +31,33 @@ function App() {
         }
         return newTodos;
       }
+      case "TODO_UPDATE": {
+        console.log("update");
+
+        const newTodos = [...todos];
+        const idx = newTodos.findIndex((nt) => nt.id === action.value.id);
+        if (idx !== -1) {
+          newTodos[idx]["isEdit"] = false;
+          newTodos[idx]["text"] = action.value.text;
+        }
+        console.log(newTodos);
+        return newTodos;
+      }
       case "TODO_DONE": {
         const newTodos = [...todos];
-        const idx = newTodos.findIndex((nt) => nt.id === action.value);
+        const idx = newTodos.findIndex((nt) => nt.id === action.value.id);
         if (idx !== -1) {
           newTodos[idx]["isDone"] = true;
+          action.value.Class.style.setProperty(
+            "text-decoration",
+            "line-through"
+          );
         }
         return newTodos;
       }
       case "TODO_UNDONE": {
         const newTodos = [...todos];
-        const idx = newTodos.findIndex((nt) => nt.id === action.value);
+        const idx = newTodos.findIndex((nt) => nt.id === action.value.id);
         if (idx !== -1) {
           newTodos[idx]["isDone"] = false;
         }
@@ -72,23 +88,29 @@ function App() {
       value: id,
     });
   }
+  function handleUpdate(id, text) {
+    dispatch({
+      type: "TODO_UPDATE",
+      value: { id, text },
+    });
+  }
 
-  function handleDone(id, type) {
+  function handleDone(id, type, Class) {
     if (type == "done") {
       dispatch({
         type: "TODO_DONE",
-        value: id,
+        value: { is, Class },
       });
     } else {
       dispatch({
         type: "TODO_UNDONE",
-        value: id,
+        value: { id, Class },
       });
     }
   }
 
   return (
-    <>
+    <div className="container-fluid">
       <h1>My Todo App</h1>
       <TodoAddForm handleAdd={handleAdd} />
       <TodoList
@@ -96,8 +118,9 @@ function App() {
         handleDelete={handleDelete}
         handleDone={handleDone}
         handleEdit={handleEdit}
+        handleUpdate={handleUpdate}
       />
-    </>
+    </div>
   );
 }
 
