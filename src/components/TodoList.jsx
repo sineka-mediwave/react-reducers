@@ -32,12 +32,7 @@ const TodoList = ({
       );
       const targetIndex = updatedTodos.findIndex((t) => t.id === target.id);
 
-      if (draggedIndex !== -1 && targetIndex !== -1) {
-        updatedTodos.splice(draggedIndex, 1);
-        updatedTodos.splice(targetIndex, 0, draggedTodo);
-      }
-
-      dragUpdate(updatedTodos);
+      dragUpdate(draggedIndex, targetIndex, draggedTodo);
       setDraggedTodo(null);
     }
   };

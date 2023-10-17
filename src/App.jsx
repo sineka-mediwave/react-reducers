@@ -65,7 +65,14 @@ function App() {
         return newTodos;
       }
       case "TODO_DRAG": {
-        return action.value;
+        const updatedTodos = [...todos];
+        const draggedIndex = action.value.dragidx;
+        const targetIndex = action.value.targidx;
+        if (draggedIndex !== -1 && targetIndex !== -1) {
+          updatedTodos.splice(draggedIndex, 1);
+          updatedTodos.splice(targetIndex, 0, action.value.todo);
+        }
+        return updatedTodos;
       }
       default: {
         throw Error("Unknown action: " + action.type);
@@ -99,10 +106,10 @@ function App() {
     });
   }
 
-  function dragUpdate(newTodos) {
+  function dragUpdate(dragidx, targidx, todo) {
     dispatch({
       type: "TODO_DRAG",
-      value: newTodos,
+      value: { dragidx, targidx, todo },
     });
   }
 
